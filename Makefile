@@ -1,0 +1,65 @@
+CC=g++
+CC_FLAGS=-std=c++17 -O2 -Wall
+
+test: test.cpp
+	$(CC) $(CC_FLAGS) $(^) -o test
+
+p1: p1.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p1_test
+
+p2: p2.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p2_test
+
+p3: p3.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p3_test
+
+p4: p4.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p4_test
+
+p5: p5.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p5_test
+
+p6: p6.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p6_test
+
+p7: p7.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p7_test
+
+p8: p8.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p8_test
+
+p9: p9.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p9_test
+
+p10: p10.cpp
+	$(cc) $(cc_flags) $(^) -o p10_test
+
+p11: p11.cpp
+	$(cc) $(cc_flags) $(^) -o p11_test
+
+p12: p12.cpp
+	$(cc) $(cc_flags) $(^) -o p12_test
+
+p13: p13.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p13_test
+
+p14: p14.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p14_test
+
+p15: p15.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p15_test
+
+p16: p16.py
+	python3 $(^)
+
+p23: p23.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p23_test
+
+p24: p24.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p24_test
+
+clean:
+	rm -f p*_test
+	rm -f test
+	clear
+	clear
