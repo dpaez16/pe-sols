@@ -1,5 +1,6 @@
 CC=g++
 CC_FLAGS=-std=c++17 -O2 -Wall
+PYTHON3=python3
 
 test: test.cpp
 	$(CC) $(CC_FLAGS) $(^) -o test
@@ -32,13 +33,13 @@ p9: p9.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p9_test
 
 p10: p10.cpp
-	$(cc) $(cc_flags) $(^) -o p10_test
+	$(CC) $(CC_FLAGS) $(^) -o p10_test
 
 p11: p11.cpp
-	$(cc) $(cc_flags) $(^) -o p11_test
+	$(CC) $(CC_FLAGS) $(^) -o p11_test
 
 p12: p12.cpp
-	$(cc) $(cc_flags) $(^) -o p12_test
+	$(CC) $(CC_FLAGS) $(^) -o p12_test
 
 p13: p13.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p13_test
@@ -50,7 +51,7 @@ p15: p15.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p15_test
 
 p16: p16.py
-	python3 $(^)
+	$(PYTHON3) $(^)
 
 p23: p23.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p23_test
