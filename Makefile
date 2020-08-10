@@ -56,6 +56,9 @@ p16: p16.py
 p17: p17.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p17_test
 
+p18: p18.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p18_test
+
 p23: p23.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p23_test
 
