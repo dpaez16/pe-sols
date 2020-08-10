@@ -59,6 +59,9 @@ p17: p17.cpp
 p18: p18.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p18_test
 
+p19: p19.py
+	$(PYTHON3) $(^)
+
 p23: p23.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p23_test
 
