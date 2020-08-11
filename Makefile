@@ -2,9 +2,6 @@ CC=g++
 CC_FLAGS=-std=c++17 -O2 -Wall
 PYTHON3=python3
 
-test: test.cpp
-	$(CC) $(CC_FLAGS) $(^) -o test
-
 p1: p1.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p1_test
 
@@ -88,6 +85,9 @@ p28: p28.cpp
 
 p29: p29.py
 	$(PYTHON3) $(^)
+
+p30: p30.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p30_test
 
 clean:
 	rm -f p*_test
