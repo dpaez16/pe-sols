@@ -36,7 +36,7 @@ bool is_n_digit_pandigital(unsigned long long d) {
 }
 
 int main() {
-    for (unsigned long long d = MAX_N_DIGIT_PANDIGITAL; d >= MIN_N_DIGIT_PANDIGITAL; d-= 2) {
+    for (unsigned long long d = MAX_N_DIGIT_PANDIGITAL; d >= MIN_N_DIGIT_PANDIGITAL; d -= 2) {
         if (is_n_digit_pandigital(d) && is_prime(d)) {
             cout << d << endl;
             break;
