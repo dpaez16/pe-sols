@@ -104,6 +104,9 @@ p38: p38.cpp
 p39: p39.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p39_test
 
+p40: p40.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p40_test
+
 clean:
 	rm -f p*_test
 	clear
