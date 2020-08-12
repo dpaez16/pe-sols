@@ -89,6 +89,9 @@ p29: p29.py
 p30: p30.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p30_test
 
+p31: p31.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p31_test
+
 clean:
 	rm -f p*_test
 	clear
