@@ -95,6 +95,9 @@ p31: p31.cpp
 p36: p36.py
 	$(PYTHON3) $(^)
 
+p37: p37.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p37_test
+
 clean:
 	rm -f p*_test
 	clear
