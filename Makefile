@@ -116,6 +116,9 @@ p42: p42.cpp
 p43: p43.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p43_test
 
+p44: p44.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p44_test
+
 clean:
 	rm -f p*_test
 	clear
