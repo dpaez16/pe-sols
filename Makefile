@@ -125,7 +125,7 @@ p45: p45.cpp
 p46: p46.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p46_test
 
-p47: p47.py
+p48: p48.py
 	$(PYTHON3) $(^)
 
 clean:
