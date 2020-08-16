@@ -128,6 +128,9 @@ p46: p46.cpp
 p48: p48.py
 	$(PYTHON3) $(^)
 
+p50: p50.cpp
+	$(CC) $(CC_FLAGS) -pthread $(^) -o p50_test
+
 clean:
 	rm -f p*_test
 	clear
