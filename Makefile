@@ -137,6 +137,9 @@ p48: p48.py
 p50: p50.cpp
 	$(CC) $(CC_FLAGS) -pthread $(^) -o p50_test
 
+p52: p52.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p52_test
+
 clean:
 	rm -f p*_test
 	clear
