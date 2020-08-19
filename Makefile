@@ -140,6 +140,9 @@ p50: p50.cpp
 p52: p52.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p52_test
 
+p53: p53.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p53_test
+
 clean:
 	rm -f p*_test
 	clear
