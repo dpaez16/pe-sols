@@ -158,14 +158,14 @@ p62: p62.cpp
 p63: p63.py
 	$(PYTHON3) $(^)
 
-p66: p66.cpp
-	$(CC) $(CC_FLAGS) $(^) -o p66_test
-
 p67: p67.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p67_test
 
 p78: p78.py
 	$(PYTHON3) $(^)
+
+p81: p81.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p81_test
 
 clean:
 	rm -f p*_test
