@@ -92,59 +92,59 @@ bool is_edge(pair<int, int> & vertex_a, pair<int, int> & vertex_b, unordered_map
 	return neighbors_a.find(vertex_b) != neighbors_a.end();
 }
 
+pair<int, int> get_min_vertex(vector<pair<int, int>> & q, unordered_map<pair<int, int>, unsigned, pair_hash> & dist) {
+	unsigned min_i = 0;
+	unsigned min_dist = INFTY;
+
+	for (unsigned i = 0; i < q.size(); i++) {
+		auto vertex = q[i];
+		if (min_dist > dist[vertex]) {
+			min_i = i;
+			min_dist = dist[vertex];
+		}
+	}
+
+	auto min_vertex = q[min_i];
+	q.erase(q.begin() + min_i);
+
+	return min_vertex;
+}
+
 int main() {
     vector<vector<int>> matrix = process_file();
 	vector<pair<int, int>> vertices = get_vertices();
 	unordered_map<pair<int, int>, unordered_set<pair<int, int>, pair_hash>, pair_hash> edges = get_edges();
-	
-	// Floyd-Warshall
-	int n_vertices = vertices.size();
-	unsigned ** dist = new unsigned * [n_vertices];
 
-	for (int r = 0; r < n_vertices; r++) {
-		dist[r] = new unsigned [n_vertices];
+	// Dijkstra
+	unordered_map<pair<int, int>, unsigned, pair_hash> dist;
+	vector<pair<int, int>> q;
+	pair<int, int> source(-1, -1);
 
-		for (int c = 0; c < n_vertices; c++) {
-			auto vertex_a = vertices[r];
-			auto vertex_b = vertices[c];
-			
-			if (vertex_a == vertex_b) {
-				dist[r][c] = 0;
-			} else if (is_edge(vertex_a, vertex_b, edges)) {
-				int i = vertex_b.first, j = vertex_b.second;
-				dist[r][c] = matrix[i][j];
-			} else {
-				dist[r][c] = INFTY;
-			}
-		}
+	for (auto vertex : vertices) {
+		dist[vertex] = INFTY;
+		q.push_back(vertex);
 	}
 
-	for (int k = 0; k < n_vertices; k++) {
-		for (int i = 0; i < n_vertices; i++) {
-			for (int j = 0; j < n_vertices; j++) {
-				unsigned alt = dist[i][k] + dist[k][j];
-				if (dist[i][k] == INFTY || dist[k][j] == INFTY) alt = INFTY;
+	dist[source] = 0;
 
-				dist[i][j] = min(dist[i][j], alt);
-			}
+	while (q.size() != 0) {
+		pair<int, int> u = get_min_vertex(q, dist);
+
+		auto neighbors = edges[u];
+		for (auto v : neighbors) {
+			int i = v.first, j = v.second;
+			unsigned alt = dist[u] + matrix[i][j];
+			if (dist[u] == INFTY) alt = INFTY;
+
+			dist[v] = min(dist[v], alt);
 		}
 	}
 
 	unsigned min_dist = INFTY;
-	for (int i = 0; i < n_vertices; i++) {
-		auto vertex = vertices[i];
-		if (vertex.second != N - 1) continue;
-
-		min_dist = min(min_dist, dist[0][i]);
+	for (int r = 0; r < N; r++) {
+		min_dist = min(min_dist, dist[PAIR(r, N - 1)]);
 	}
 
 	cout << min_dist << endl;
-
-	for (int r = 0; r < n_vertices; r++) {
-		delete [] dist[r];
-	}
-
-	delete [] dist;
-
     return 0;
 }
