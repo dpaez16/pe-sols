@@ -167,6 +167,9 @@ p78: p78.py
 p81: p81.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p81_test
 
+p82: p82.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p82_test
+
 clean:
 	rm -f p*_test
 	clear
