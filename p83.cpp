@@ -114,6 +114,7 @@ int main() {
 	vector<pair<int, int>> vertices = get_vertices();
 	unordered_map<pair<int, int>, unordered_set<pair<int, int>, pair_hash>, pair_hash> edges = get_edges();
 
+	// Dijkstra
 	unordered_map<pair<int, int>, unsigned, pair_hash> dist;
 	vector<pair<int, int>> q;
 	pair<int, int> source(-1, -1);
