@@ -173,6 +173,9 @@ p82: p82.cpp
 p83: p83.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p83_test
 
+p107: p107.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p107_test
+
 clean:
 	rm -f p*_test
 	clear
