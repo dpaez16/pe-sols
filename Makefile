@@ -179,6 +179,9 @@ p102: p102.cpp
 p107: p107.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p107_test
 
+p112: p112.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p112_test
+
 clean:
 	rm -f p*_test
 	clear
