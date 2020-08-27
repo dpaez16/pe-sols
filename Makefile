@@ -77,6 +77,9 @@ p24: p24.cpp
 p25: p25.py
 	$(PYTHON3) $(^)
 
+p26: p26.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p26_test
+
 p27: p27.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p27_test
 
