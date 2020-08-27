@@ -95,6 +95,9 @@ p30: p30.cpp
 p31: p31.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p31_test
 
+p32: p32.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p32_test
+
 p35: p35.cpp
 	$(CC) $(CC_FLAGS) $(^) -o p35_test
 
