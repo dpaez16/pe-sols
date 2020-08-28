@@ -146,6 +146,9 @@ p47: p47.cpp
 p48: p48.py
 	$(PYTHON3) $(^)
 
+p49: p49.cpp
+	$(CC) $(CC_FLAGS) $(^) -o p49_test
+
 p50: p50.cpp
 	$(CC) $(CC_FLAGS) -pthread $(^) -o p50_test
 
