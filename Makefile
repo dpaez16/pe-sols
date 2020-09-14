@@ -152,6 +152,9 @@ p49: p49.cpp
 p50: p50.cpp
 	$(CC) $(CC_FLAGS) -pthread $(^) -o $(@)_test
 
+p51: p51.cpp
+	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
+
 p52: p52.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
