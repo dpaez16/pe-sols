@@ -2,8 +2,6 @@
 
 using namespace std;
 
-#define N_DIGITS 6
-//#define N_DIGITS 7
 #define PRIME_FAMILY_SIZE 8
 
 
@@ -19,33 +17,85 @@ bool is_prime(unsigned int & n) {
 	return true;
 }
 
+bool eligible_prime(unsigned prime, unsigned mask) {
+	string prime_str = to_string(prime);
+	char curr_digit = 0;
+
+	for (unsigned i = 0; i < prime_str.size(); i++, mask >>= 1) {
+		if ((mask & 1) == 0) continue;
+
+		char old_digit = prime_str[prime_str.size() - 1 - i];
+
+		if (curr_digit == 0) curr_digit = old_digit;
+		if (curr_digit != old_digit) return false;
+	}
+
+	return true;
+	
+}
+
+unsigned apply_mask(unsigned prime, int digit, unsigned mask) {
+	string prime_str = to_string(prime);
+
+	for (unsigned i = 0; i < prime_str.size(); i++, mask >>= 1) {
+		if ((mask & 1) == 0) continue;
+
+		char c = '0' + digit;
+
+		prime_str[prime_str.size() - 1 - i] = c;
+	}
+
+	return stoul(prime_str);
+}
+
+vector<unsigned> get_family(set<unsigned> & primes, unsigned test_prime, unsigned mask) {
+	vector<unsigned> family = {};
+
+	for (int d = 0; d <= 9; d++) {
+		unsigned masked_prime = apply_mask(test_prime, d, mask);
+			
+		if (primes.find(masked_prime) == primes.end()) continue;
+
+		family.push_back(masked_prime);
+	}
+
+	return family;
+}
+
 int main() {
 	vector<set<unsigned>> group_primes;
-	unsigned exp = 1;
-	unsigned n = 0;
+	unsigned n_digits = 1;
+	unsigned p = 0;
+	unsigned min_prime;
 
-	while (exp <= N_DIGITS) {
+	while (true) {
 		set<unsigned> primes;
 
-		while (true) {
-			if (!is_prime(n)) goto END_INNER_LOOP;
+		while (++p != pow(10, n_digits)) {
+			if (!is_prime(p)) continue;
 
-			primes.insert(n);
-
-			END_INNER_LOOP:
-			if (++n == pow(10, exp)) break;
+			primes.insert(p);
 		}
 
-		if (primes.size() >= PRIME_FAMILY_SIZE)
-			group_primes.push_back(primes);
+		for (unsigned test_prime : primes) {
+			for (unsigned mask = 1; mask < pow(2, n_digits); mask++) {
+				if (!eligible_prime(test_prime, mask)) continue;
 
-		exp++;
+				vector<unsigned> family = get_family(primes, test_prime, mask);
+
+				if (family.size() != PRIME_FAMILY_SIZE) continue;
+
+				min_prime = test_prime;
+				goto END;
+			}
+		}
+		
+		n_digits++;
 	}
 
-	for (auto primes : group_primes) {
-		cout << primes.size() << endl;
-	}
-
+	END:
+	cout << min_prime << endl;
+	
 	return 0;
 }
 
