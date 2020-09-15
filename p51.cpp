@@ -17,7 +17,7 @@ bool is_prime(unsigned int & n) {
 	return true;
 }
 
-bool eligible_prime(unsigned prime, unsigned mask) {
+bool eligible_prime(unsigned & prime, unsigned mask) {
 	string prime_str = to_string(prime);
 	char curr_digit = 0;
 
@@ -34,7 +34,7 @@ bool eligible_prime(unsigned prime, unsigned mask) {
 	
 }
 
-unsigned apply_mask(unsigned prime, int digit, unsigned mask) {
+unsigned apply_mask(unsigned & prime, int & digit, unsigned mask) {
 	string prime_str = to_string(prime);
 
 	for (unsigned i = 0; i < prime_str.size(); i++, mask >>= 1) {
@@ -48,22 +48,21 @@ unsigned apply_mask(unsigned prime, int digit, unsigned mask) {
 	return stoul(prime_str);
 }
 
-vector<unsigned> get_family(set<unsigned> & primes, unsigned test_prime, unsigned mask) {
-	vector<unsigned> family = {};
+unsigned get_family_size(set<unsigned> & primes, unsigned & test_prime, unsigned & mask) {
+	unsigned family_size = 0;
 
 	for (int d = 0; d <= 9; d++) {
 		unsigned masked_prime = apply_mask(test_prime, d, mask);
 			
 		if (primes.find(masked_prime) == primes.end()) continue;
-
-		family.push_back(masked_prime);
+		
+		family_size++;
 	}
 
-	return family;
+	return family_size;
 }
 
 int main() {
-	vector<set<unsigned>> group_primes;
 	unsigned n_digits = 1;
 	unsigned p = 0;
 	unsigned min_prime;
@@ -81,9 +80,9 @@ int main() {
 			for (unsigned mask = 1; mask < pow(2, n_digits); mask++) {
 				if (!eligible_prime(test_prime, mask)) continue;
 
-				vector<unsigned> family = get_family(primes, test_prime, mask);
+				unsigned family_size = get_family_size(primes, test_prime, mask);
 
-				if (family.size() != PRIME_FAMILY_SIZE) continue;
+				if (family_size != PRIME_FAMILY_SIZE) continue;
 
 				min_prime = test_prime;
 				goto END;
