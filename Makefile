@@ -164,6 +164,9 @@ p53: p53.cpp
 p55: p55.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
+p57: p57.cpp
+	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
+
 p58: p58.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
