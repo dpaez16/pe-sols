@@ -179,6 +179,9 @@ p62: p62.cpp
 p63: p63.py
 	$(PYTHON3) $(^)
 
+p64: p64.py
+	$(PYTHON3) $(^)
+
 p66: p66.py
 	$(PYTHON3) $(^)
 
