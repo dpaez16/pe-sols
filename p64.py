@@ -37,7 +37,7 @@ def period_length_check(period_length, digits):
 
         num_matches += 1
 
-    return num_matches
+    return num_matches, num_slices
 
 def get_period_length(cfe):
     if len(cfe) == 1:
@@ -47,7 +47,11 @@ def get_period_length(cfe):
     matches = []
 
     for period_length in range(1, len(digits)):
-        num_matches = period_length_check(period_length, digits)
+        num_matches, num_slices = period_length_check(period_length, digits)
+
+        if num_matches == num_slices:
+            return period_length
+
         matches.append([period_length, num_matches])
 
     period_length, _ = max(matches, key=lambda x: x[1])
