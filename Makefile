@@ -200,6 +200,9 @@ p82: p82.cpp
 p83: p83.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
+p85: p85.cpp
+	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
+
 p102: p102.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
