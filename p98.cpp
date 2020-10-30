@@ -65,8 +65,8 @@ vector<unordered_set<string>> get_anagram_groups(unordered_set<string> & words) 
 	return anagram_groups;
 }
 
-unordered_set<int> get_squares(int upper_bound) {
-	unordered_set<int> squares;
+vector<int> get_squares(int upper_bound) {
+	vector<int> squares;
 
 	int n = 0;
 	while (true) {
@@ -75,70 +75,47 @@ unordered_set<int> get_squares(int upper_bound) {
 		if (n_sq >= upper_bound)
 			break;
 		
-		squares.insert(n_sq);
+		squares.push_back(n_sq);
 		n++;
 	}
 
+	reverse(squares.begin(), squares.end());
 	return squares;
 }
 
-vector<char> get_unique_letters(string & word) {
-	unordered_set<char> unique_letters(word.begin(), word.end());
-	vector<char> letters_vec;
+bool subs_are_unique(unordered_map<char, int> & letter_map) {
+	unordered_map<int, unordered_set<char>> num_map;
 
-	for (char letter : unique_letters) {
-		letters_vec.push_back(letter);
-	}
-
-	return letters_vec;
-}
-
-void decrement_vec(vector<int> & v) {
-	int r = -1;
-	for (int idx = v.size() - 1; idx >= 0; idx--) {
-		v[idx] += r;
+	for (auto p : letter_map) {
+		int letter = p.first;
+		int num = p.second;
 		
-		if (v[idx] == -1) {
-			v[idx] = 9;
-			r = -1;
-		} else {
-			r = 0;
+		if (num_map.find(num) == num_map.end()) {
+			num_map[num] = {};
 		}
+
+		num_map[num].insert(letter);
 	}
+
+	for (auto p : num_map) {
+		auto letters = p.second;
+
+		if (letters.size() > 1)
+			return false;
+	}
+
+	return true;
 }
 
-vector<int> get_begin_vec(int n) {
-	vector<int> vec;
-
-	for (int i = 0; i < n; i++) {
-		vec.push_back(9);
+int create_num(string word, unordered_map<char, int> & letter_map) {
+	for (unsigned idx = 0; idx < word.size(); idx++) {
+		char letter = word[idx];
+		word[idx] = '0' + letter_map[letter];
 	}
 
-	return vec;
-}
+	if (word[0] == '0') return -1;
 
-bool subs_are_unique(vector<int> & subs) {
-	unordered_set<int> unique_nums(subs.begin(), subs.end());
-
-	return subs.size() == unique_nums.size();
-}
-
-int create_num(string word, vector<char> & unique_letters, vector<int> & subs) {
-	unordered_map<char, char> letter_map;
-	for (unsigned idx = 0; idx < unique_letters.size(); idx++) {
-		char letter = unique_letters[idx];
-		char sub = '0' + subs[idx];
-
-		letter_map[letter] = sub;
-	}
-
-	string new_word = word;
-	for (unsigned idx = 0; idx < new_word.size(); idx++) {
-		char letter = new_word[idx];
-		new_word[idx] = letter_map[letter];
-	}
-
-	int num = stoi(new_word);
+	int num = stoi(word);
 	return num;
 }
 
@@ -152,58 +129,97 @@ pair<string, string> get_pair(unordered_set<string> & s) {
 	return p;
 }
 
-int get_square(unordered_set<string> & anagram_group, unordered_set<int> & squares) {
+bool subs_work_helper(vector<int> & subs, string & word) {
+	if (subs.size() != word.size()) return false;
+
+	for (unsigned i = 0; i < word.size(); i++) {
+		for (unsigned j = 0; j < word.size(); j++) {
+			if (word[i] != word[j]) continue;
+			if (subs[i] != subs[j]) return false;
+		}
+	}
+
+	return true;
+}
+
+bool subs_work(vector<int> & subs, unordered_set<int> & squares, string & word, string & other_word) {
+	if (subs_work_helper(subs, word)) {
+		unordered_map<char, int> letter_map;
+		for (unsigned i = 0; i < word.size(); i++) {
+			char letter = word[i];
+			letter_map[letter] = subs[i];
+		}
+		
+		if (!subs_are_unique(letter_map)) {
+			return false;
+		}
+
+		int num = create_num(other_word, letter_map);
+		return squares.find(num) != squares.end();
+	} else if (subs_work_helper(subs, other_word)) {
+		unordered_map<char, int> letter_map;
+		for (unsigned i = 0; i < other_word.size(); i++) {
+			char letter = other_word[i];
+			letter_map[letter] = subs[i];
+		}
+
+		if (!subs_are_unique(letter_map)) {
+			return false;
+		}
+
+		int num = create_num(word, letter_map);
+		return squares.find(num) != squares.end();
+	} else {
+		return false;
+	}
+}
+
+vector<int> num_to_vec(int n) {
+	vector<int> v;
+	
+	while (n > 0) {
+		v.push_back(n % 10);
+		n /= 10;
+	}
+
+	reverse(v.begin(), v.end());
+	return v;
+}
+
+int get_square(unordered_set<string> & anagram_group) {
 	pair<string, string> p = get_pair(anagram_group);
 	string word = p.first;
 	string other_word = p.second;
-	vector<char> unique_letters = get_unique_letters(word);
-	int n_digits = unique_letters.size();
+	int n_digits = word.size();
 	int upper_bound = pow(10, n_digits);
 
-	vector<int> curr_subs = get_begin_vec(n_digits);
-	int max_square = -1;
-
-	for (int i = 0; i < upper_bound; i++, decrement_vec(curr_subs)) {
-		if (!subs_are_unique(curr_subs)) {
+	vector<int> squares = get_squares(upper_bound);
+	unordered_set<int> squares_set(squares.begin(), squares.end());
+	
+	for (int i : squares) {
+		vector<int> subs = num_to_vec(i);
+		
+		if (!subs_work(subs, squares_set, word, other_word)) {
 			continue;
 		}
 
-		int num = create_num(word, unique_letters, curr_subs);
-		int other_num = create_num(other_word, unique_letters, curr_subs);
-
-		if (squares.find(num) == squares.end()) continue;
-		if (squares.find(other_num) == squares.end()) continue;
-		
-		max_square = max(max_square, max(num, other_num));
+		return i;
 	}
 
-	return max_square;
+	return -1;
 }
 
 int main() {
 	unordered_set<string> words = process_file();
 	vector<unordered_set<string>> anagram_groups = get_anagram_groups(words);
 
-	int max_n_digits = 0;
-
-	for (auto anagram_group : anagram_groups) {
-		pair<string, string> p = get_pair(anagram_group);
-		string word = p.first;
-		int n_digits = word.size();
-		max_n_digits = max(max_n_digits, n_digits);
-	}
-
-	int upper_bound = pow(10, max_n_digits);
-	unordered_set<int> squares = get_squares(upper_bound);
-
 	int max_square = 0;
 
 	for (auto anagram_group : anagram_groups) {
-		string word = *(anagram_group.begin());
-		int square = get_square(anagram_group, squares);
+		int square = get_square(anagram_group);
 		max_square = max(max_square, square);
-		cout << max_square << endl;
 	}
 
+	cout << max_square << endl;
 	return 0;
 }
