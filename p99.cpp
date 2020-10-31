@@ -11,8 +11,8 @@ long double process_line(string & line) {
 	getline(ss, base_str, ',');
 	getline(ss, exponent_str, ',');
 
-	long double base = stod(base_str);
-	long double exponent = stod(exponent_str);
+	long double base = stold(base_str);
+	long double exponent = stold(exponent_str);
 
 	return exponent * logl(base);
 }
@@ -42,7 +42,7 @@ int main() {
 		long double num = nums[i];
 		if (num > max_num) {
 			max_num = num;
-			max_line_num = i;
+			max_line_num = i + 1;
 		}
 	}
 
