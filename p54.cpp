@@ -72,8 +72,20 @@ vector<pair<hand, hand>> process_file() {
 	return games;
 }
 
-bool p1_winner(hand & p1, hand & p2) {
+Rank get_rank(hand & player) {
     // TODO
+    return royal_flush;
+}
+
+bool p1_winner(hand & p1, hand & p2) {
+    Rank rank_p1 = get_rank(p1);
+    Rank rank_p2 = get_rank(p2);
+
+    if (rank_p1 != rank_p2) {
+        return rank_p1 > rank_p2;
+    }
+
+    // TODO - tiebreaker
     return true;
 }
 
