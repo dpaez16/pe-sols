@@ -27,21 +27,20 @@ enum Rank {
     royal_flush
 };
 
-unordered_map<string, int> VAL_MAP = {
-    {"T", 10},
-    {"J", 11},
-    {"Q", 12},
-    {"K", 13},
-    {"A", 14}
+unordered_map<char, int> VAL_MAP = {
+    {'T', 10},
+    {'J', 11},
+    {'Q', 12},
+    {'K', 13},
+    {'A', 14}
 };
 
 card get_card(string & raw_card) {
-    int size = raw_card.size();
     card c;
 
-    char suit = raw_card[size - 1];
-    string value = raw_card.substr(0, size - 1);
-    int value_int = all_of(value.begin(), value.end(), ::isdigit) ? stoi(value) : VAL_MAP[value];
+    char suit = raw_card[1];
+    char value = raw_card[0];
+    int value_int = isdigit(value) ? value - '0' : VAL_MAP[value];
 
     c.suit = suit;
     c.value = value_int;
@@ -101,10 +100,27 @@ void print_cards(const card cards[HAND_SIZE]) {
     cout << endl;
 }
 
+bool is_royal_flush(const card cards[HAND_SIZE]) {
+    char suit = cards[0].suit;
+
+    for (unsigned idx = 0; idx < HAND_SIZE; idx++) {
+        int value = 10 + idx;
+
+        if (cards[idx].suit != suit) return false;
+        if (cards[idx].value != value) return false;
+    }
+
+    return true;
+}
+
 Rank get_rank(hand & player) {
-    // TODO
     sort(player.cards, player.cards + HAND_SIZE, card_lt);
-    return royal_flush;
+    
+    if (is_royal_flush(player.cards)) {
+        return royal_flush;
+    } else {
+        return high_card;
+    }
 }
 
 bool p1_winner(hand & p1, hand & p2) {
@@ -128,7 +144,6 @@ int main() {
         hand p2 = game.second;
 
         if (p1_winner(p1, p2)) count++;
-        break;
     }
 
     cout << count << endl;
