@@ -38,7 +38,7 @@ unordered_map<string, int> VAL_MAP = {
 card get_card(string & raw_card) {
     int size = raw_card.size();
     card c;
-    
+
     char suit = raw_card[size - 1];
     string value = raw_card.substr(0, size - 1);
     int value_int = all_of(value.begin(), value.end(), ::isdigit) ? stoi(value) : VAL_MAP[value];
@@ -103,9 +103,7 @@ void print_cards(const card cards[HAND_SIZE]) {
 
 Rank get_rank(hand & player) {
     // TODO
-    print_cards(player.cards);
     sort(player.cards, player.cards + HAND_SIZE, card_lt);
-    print_cards(player.cards);
     return royal_flush;
 }
 
