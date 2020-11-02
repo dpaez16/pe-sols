@@ -6,7 +6,7 @@ using namespace std;
 
 typedef struct {
     char suit;
-    char value;
+    int value;
 } card;
 
 typedef struct {
@@ -26,6 +26,13 @@ enum Rank {
     royal_flush
 };
 
+unordered_map<char, int> VAL_MAP = {
+    {'J', 10},
+    {'Q', 11},
+    {'K', 12},
+    {'A', 13}
+};
+
 pair<hand, hand> process_line(string & line) {
     hand p1, p2;
 
@@ -37,9 +44,10 @@ pair<hand, hand> process_line(string & line) {
         getline(ss, raw_card, ' ');
 
         char value = raw_card[0];
+        int value_int = isdigit(value) ? value - '0' : VAL_MAP[value];
         char suit = raw_card[1];
 
-        p1.cards[idx].value = value;
+        p1.cards[idx].value = value_int;
         p1.cards[idx].suit = suit;
     }
 
@@ -72,8 +80,17 @@ vector<pair<hand, hand>> process_file() {
 	return games;
 }
 
+bool card_lt(const card & left, const card & right) {
+    if (left.value == right.value) {
+        return left.suit < right.suit;
+    }
+
+    return left.value < right.value;
+}
+
 Rank get_rank(hand & player) {
     // TODO
+    sort(player.cards, player.cards + 5, card_lt);
     return royal_flush;
 }
 
