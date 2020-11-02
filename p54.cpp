@@ -113,11 +113,24 @@ bool is_royal_flush(const card cards[HAND_SIZE]) {
     return true;
 }
 
+bool is_straight(const card cards[HAND_SIZE]) {
+    char suit = cards[0].suit;
+
+    for (unsigned idx = 1; idx < HAND_SIZE; idx++) {
+        if (cards[idx].value - cards[idx - 1].value != 1) return false;
+        if (cards[idx].suit != suit) return false;
+    }
+
+    return true;
+}
+
 Rank get_rank(hand & player) {
     sort(player.cards, player.cards + HAND_SIZE, card_lt);
     
     if (is_royal_flush(player.cards)) {
         return royal_flush;
+    } else if (is_straight(player.cards)) {
+        return straight_flush;
     } else {
         return high_card;
     }
