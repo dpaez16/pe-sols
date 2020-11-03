@@ -20,7 +20,7 @@ enum Rank {
     two_pair,
     three_of_a_kind,
     straight,
-    flush,
+    flush_,
     full_house,
     four_of_a_kind,
     straight_flush,
@@ -148,6 +148,31 @@ bool is_four_of_a_kind(const card cards[HAND_SIZE]) {
     return same_value(cards, 0, 3) || same_value(cards, 1, 4);
 }
 
+bool is_full_house(const card cards[HAND_SIZE]) {
+    return  (same_value(cards, 0, 2) && same_value(cards, 3, 4)) || \
+            (same_value(cards, 0, 1) && same_value(cards, 2, 4));
+}
+
+bool is_flush(const card cards[HAND_SIZE]) {
+    return same_suit(cards, 0, 4);
+}
+
+bool is_straight(const card cards[HAND_SIZE]) {
+    for (unsigned idx = 1; idx < HAND_SIZE; idx++) {
+        if (cards[idx].value - cards[idx - 1].value != 1) return false;
+    }
+
+    return true;
+}
+
+bool is_three_of_a_kind(const card cards[HAND_SIZE]) {
+    return (
+        same_value(cards, 0, 2) || 
+        same_value(cards, 1, 3) || 
+        same_value(cards, 2, 4)
+    );
+}
+
 Rank get_rank(hand & player) {
     sort(player.cards, player.cards + HAND_SIZE, card_lt);
     
@@ -157,6 +182,14 @@ Rank get_rank(hand & player) {
         return straight_flush;
     } else if (is_four_of_a_kind(player.cards)) {
         return four_of_a_kind;
+    } else if (is_full_house(player.cards)) {
+        return full_house;
+    } else if (is_flush(player.cards)) {
+        return flush_;
+    } else if (is_straight(player.cards)) {
+        return straight;
+    } else if (is_three_of_a_kind(player.cards)) {
+        return three_of_a_kind;
     } else {
         return high_card;
     }
