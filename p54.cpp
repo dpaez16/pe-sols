@@ -227,12 +227,50 @@ bool high_card_tiebreaker(hand & p1, hand & p2) {
     return false;
 }
 
-bool handle_tiebreaker(hand & p1, Rank r_p1, hand & p2, Rank r_p2) {
-    if (r_p1 == r_p2 && r_p1 == high_card) {
-        return high_card_tiebreaker(p1, p2);
+pair<int, vector<card>> decomp_one_pair(const card cards[HAND_SIZE]) {
+    int pair_value;
+    vector<card> remaining_cards;
+
+    for (unsigned idx = 1; idx < HAND_SIZE; idx++) {
+        if (cards[idx].value == cards[idx - 1].value) {
+            pair_value = cards[idx].value;
+            break;
+        }
     }
 
-    return false;
+    for (unsigned idx = 0; idx < HAND_SIZE; idx++) {
+        if (cards[idx].value == pair_value) continue;
+
+        remaining_cards.push_back(cards[idx]);
+    }
+
+    return pair<int, vector<card>>(pair_value, remaining_cards);
+}
+
+bool one_pair_tiebreaker(hand & p1, hand & p2) {
+    pair<int, vector<card>> decomp_p1 = decomp_one_pair(p1.cards);
+    pair<int, vector<card>> decomp_p2 = decomp_one_pair(p2.cards);
+
+    int p1_pair_val = decomp_p1.first;
+    int p2_pair_val = decomp_p2.first;
+
+    if (p1_pair_val != p2_pair_val) return p1_pair_val > p2_pair_val;
+
+    vector<card> p1_rem_cards = decomp_p1.second;
+    vector<card> p2_rem_cards = decomp_p2.second;
+
+    // TODO
+}
+
+bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
+    switch (rank) {
+    case high_card:
+        return high_card_tiebreaker(p1, p2);
+    case one_pair:
+        return one_pair_tiebreaker(p1, p2);
+    default:
+        return false;
+    }
 }
 
 bool p1_winner(hand & p1, hand & p2) {
@@ -243,7 +281,7 @@ bool p1_winner(hand & p1, hand & p2) {
         return rank_p1 > rank_p2;
     }
 
-    return handle_tiebreaker(p1, rank_p1, p2, rank_p2);
+    return handle_tiebreaker(p1, p2, rank_p1);
 }
 
 int main() {
