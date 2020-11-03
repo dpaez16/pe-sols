@@ -100,6 +100,26 @@ void print_cards(const card cards[HAND_SIZE]) {
     cout << endl;
 }
 
+bool same_value(const card cards[HAND_SIZE], unsigned i, unsigned j) {
+    int value = cards[i].value;
+
+    for (unsigned idx = i; idx <= j; idx++) {
+        if (cards[idx].value != value) return false;
+    }
+
+    return true;
+}
+
+bool same_suit(const card cards[HAND_SIZE], unsigned i, unsigned j) {
+    char suit = cards[i].suit;
+
+    for (unsigned idx = i; idx <= j; idx++) {
+        if (cards[idx].suit != suit) return false;
+    }
+
+    return true;
+}
+
 bool is_royal_flush(const card cards[HAND_SIZE]) {
     char suit = cards[0].suit;
 
@@ -113,7 +133,7 @@ bool is_royal_flush(const card cards[HAND_SIZE]) {
     return true;
 }
 
-bool is_straight(const card cards[HAND_SIZE]) {
+bool is_straight_flush(const card cards[HAND_SIZE]) {
     char suit = cards[0].suit;
 
     for (unsigned idx = 1; idx < HAND_SIZE; idx++) {
@@ -124,13 +144,19 @@ bool is_straight(const card cards[HAND_SIZE]) {
     return true;
 }
 
+bool is_four_of_a_kind(const card cards[HAND_SIZE]) {
+    return same_value(cards, 0, 3) || same_value(cards, 1, 4);
+}
+
 Rank get_rank(hand & player) {
     sort(player.cards, player.cards + HAND_SIZE, card_lt);
     
     if (is_royal_flush(player.cards)) {
         return royal_flush;
-    } else if (is_straight(player.cards)) {
+    } else if (is_straight_flush(player.cards)) {
         return straight_flush;
+    } else if (is_four_of_a_kind(player.cards)) {
+        return four_of_a_kind;
     } else {
         return high_card;
     }
