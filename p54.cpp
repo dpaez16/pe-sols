@@ -173,6 +173,24 @@ bool is_three_of_a_kind(const card cards[HAND_SIZE]) {
     );
 }
 
+bool is_two_pair(const card cards[HAND_SIZE]) {
+    for (unsigned i = 0; i <= 1; i++) {
+        for (unsigned j = i + 2; j + 1 < HAND_SIZE; j++) {
+            if (same_value(cards, i, i + 1) && same_value(cards, j, j + 1)) return true;
+        }
+    }
+
+    return false;
+}
+
+bool is_one_pair(const card cards[HAND_SIZE]) {
+    for (unsigned idx = 1; idx < HAND_SIZE; idx++) {
+        if (cards[idx - 1].value == cards[idx].value) return true;
+    }
+
+    return false;
+}
+
 Rank get_rank(hand & player) {
     sort(player.cards, player.cards + HAND_SIZE, card_lt);
     
@@ -190,9 +208,31 @@ Rank get_rank(hand & player) {
         return straight;
     } else if (is_three_of_a_kind(player.cards)) {
         return three_of_a_kind;
+    } else if (is_two_pair(player.cards)) {
+        return two_pair;
+    } else if (is_one_pair(player.cards)) {
+        return one_pair;
     } else {
         return high_card;
     }
+}
+
+bool high_card_tiebreaker(hand & p1, hand & p2) {
+    for (int idx = HAND_SIZE - 1; idx >= 0; idx--) {
+        if (p1.cards[idx].value == p2.cards[idx].value) continue;
+
+        return p1.cards[idx].value > p2.cards[idx].value;
+    }
+
+    return false;
+}
+
+bool handle_tiebreaker(hand & p1, Rank r_p1, hand & p2, Rank r_p2) {
+    if (r_p1 == r_p2 && r_p1 == high_card) {
+        return high_card_tiebreaker(p1, p2);
+    }
+
+    return false;
 }
 
 bool p1_winner(hand & p1, hand & p2) {
@@ -203,8 +243,7 @@ bool p1_winner(hand & p1, hand & p2) {
         return rank_p1 > rank_p2;
     }
 
-    // TODO - tiebreaker
-    return true;
+    return handle_tiebreaker(p1, rank_p1, p2, rank_p2);
 }
 
 int main() {
