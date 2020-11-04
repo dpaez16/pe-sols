@@ -346,9 +346,9 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
         case three_of_a_kind:
             return three_of_a_kind_tiebreaker(p1, p2);
         case straight:
-            return false;
+            return high_card_tiebreaker(p1, p2);
         case flush_:
-            return false;
+            return high_card_tiebreaker(p1, p2);
         case full_house:
             return false;
         case four_of_a_kind:
@@ -356,7 +356,8 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
         case straight_flush:
             return false;
         case royal_flush:
-            return false;
+            cout << "royal flush" << endl;
+            return true;
         default:
             return false;
     }
