@@ -265,12 +265,11 @@ vector<card> decomp_two_pair(const card cards[HAND_SIZE]) {
     for (unsigned i = 0; i <= 1; i++) {
         for (unsigned j = i + 2; j + 1 < HAND_SIZE; j++) {
             if (same_value(cards, i, i + 1) && same_value(cards, j, j + 1)) {
-                pair_vals.first = cards[i].value;
-                pair_vals.second = cards[j].value;
+                pair_vals.first = max(cards[i].value, cards[j].value);
+                pair_vals.second = min(cards[i].value, cards[j].value);
 
-                int max_card_val = max(pair_vals.first, pair_vals.second);
-                card first_card = pair_vals.first == max_card_val ? cards[i] : cards[j];
-                card second_card = pair_vals.first == max_card_val ? cards[j] : cards[i];
+                card first_card = pair_vals.first == cards[i].value ? cards[i] : cards[j];
+                card second_card = first_card.value == cards[i].value ? cards[j] : cards[i];
 
                 remaining_cards.push_back(first_card);
                 remaining_cards.push_back(second_card);
@@ -284,6 +283,30 @@ vector<card> decomp_two_pair(const card cards[HAND_SIZE]) {
             cards[idx].value == pair_vals.second) {
                 continue;
         }
+
+        remaining_cards.push_back(cards[idx]);
+    }
+
+    return remaining_cards;
+}
+
+vector<card> decomp_three_of_a_kind(const card cards[HAND_SIZE]) {
+    int card_val;
+    vector<card> remaining_cards;
+
+    if (same_value(cards, 0, 2)) {
+        card_val = cards[0].value;
+        remaining_cards.push_back(cards[0]);
+    } else if (same_value(cards, 1, 3)) {
+        card_val = cards[1].value;
+        remaining_cards.push_back(cards[1]);
+    } else {
+        card_val = cards[2].value;
+        remaining_cards.push_back(cards[2]);
+    }
+
+    for (int idx = HAND_SIZE - 1; idx >= 0; idx--) {
+        if (cards[idx].value == card_val) continue;
 
         remaining_cards.push_back(cards[idx]);
     }
@@ -305,6 +328,13 @@ bool two_pair_tiebreaker(hand & p1, hand & p2) {
     return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
 }
 
+bool three_of_a_kind_tiebreaker(hand & p1, hand & p2) {
+    vector<card> decomp_p1 = decomp_three_of_a_kind(p1.cards);
+    vector<card> decomp_p2 = decomp_three_of_a_kind(p2.cards);
+
+    return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
+}
+
 bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
     switch (rank) {
         case high_card:
@@ -313,6 +343,8 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
             return one_pair_tiebreaker(p1, p2);
         case two_pair:
             return two_pair_tiebreaker(p1, p2);
+        case three_of_a_kind:
+            return three_of_a_kind_tiebreaker(p1, p2);
         default:
             return false;
     }
