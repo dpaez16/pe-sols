@@ -337,7 +337,34 @@ vector<card> decomp_full_house(const card cards[HAND_SIZE]) {
         remaining_cards.push_back(first_card);
         remaining_cards.push_back(second_card);
     }
-    
+
+    return remaining_cards;
+}
+
+vector<card> decomp_four_of_a_kind(const card cards[HAND_SIZE]) {
+    int card_val;
+    vector<card> remaining_cards;
+
+    if (same_value(cards, 0, 4)) {
+        card_val = cards[0].value;
+        remaining_cards.push_back(cards[0]);
+    } else {
+        card_val = cards[1].value;
+        remaining_cards.push_back(cards[1]);
+    }
+
+    for (int idx = HAND_SIZE - 1; idx >= 0; idx--) {
+        if (cards[idx].value == card_val) continue;
+
+        remaining_cards.push_back(cards[idx]);
+    }
+
+    return remaining_cards;
+}
+
+vector<card> decomp_straight_flush(const card cards[HAND_SIZE]) {
+    vector<card> remaining_cards;
+
     return remaining_cards;
 }
 
@@ -369,6 +396,20 @@ bool full_house_tiebreaker(hand & p1, hand & p2) {
     return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
 }
 
+bool four_of_a_kind_tiebreaker(hand & p1, hand & p2) {
+    vector<card> decomp_p1 = decomp_four_of_a_kind(p1.cards);
+    vector<card> decomp_p2 = decomp_four_of_a_kind(p2.cards);
+
+    return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
+}
+
+bool straight_flush_tiebreaker(hand & p1, hand & p2) {
+    vector<card> decomp_p1 = decomp_straight_flush(p1.cards);
+    vector<card> decomp_p2 = decomp_straight_flush(p2.cards);
+    
+    return high_card_tiebreaker(decomp_p1, decomp_p2);
+}
+
 bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
     switch (rank) {
         case high_card:
@@ -386,9 +427,9 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
         case full_house:
             return full_house_tiebreaker(p1, p2);
         case four_of_a_kind:
-            return false;
+            return four_of_a_kind_tiebreaker(p1, p2);
         case straight_flush:
-            return false;
+            return straight_flush_tiebreaker(p1, p2);
         case royal_flush:
             cout << "royal flush" << endl;
             return true;
