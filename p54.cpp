@@ -362,12 +362,6 @@ vector<card> decomp_four_of_a_kind(const card cards[HAND_SIZE]) {
     return remaining_cards;
 }
 
-vector<card> decomp_straight_flush(const card cards[HAND_SIZE]) {
-    vector<card> remaining_cards;
-
-    return remaining_cards;
-}
-
 bool one_pair_tiebreaker(hand & p1, hand & p2) {
     vector<card> decomp_p1 = decomp_one_pair(p1.cards);
     vector<card> decomp_p2 = decomp_one_pair(p2.cards);
@@ -403,13 +397,6 @@ bool four_of_a_kind_tiebreaker(hand & p1, hand & p2) {
     return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
 }
 
-bool straight_flush_tiebreaker(hand & p1, hand & p2) {
-    vector<card> decomp_p1 = decomp_straight_flush(p1.cards);
-    vector<card> decomp_p2 = decomp_straight_flush(p2.cards);
-    
-    return high_card_tiebreaker(decomp_p1, decomp_p2);
-}
-
 bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
     switch (rank) {
         case high_card:
@@ -429,12 +416,9 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
         case four_of_a_kind:
             return four_of_a_kind_tiebreaker(p1, p2);
         case straight_flush:
-            return straight_flush_tiebreaker(p1, p2);
-        case royal_flush:
-            cout << "royal flush" << endl;
+            return high_card_tiebreaker(p1, p2);
+        default: // royal_flush
             return true;
-        default:
-            return false;
     }
 }
 
