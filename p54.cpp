@@ -314,6 +314,33 @@ vector<card> decomp_three_of_a_kind(const card cards[HAND_SIZE]) {
     return remaining_cards;
 }
 
+vector<card> decomp_full_house(const card cards[HAND_SIZE]) {
+    pair<int, int> full_house_vals(0, 0);
+    vector<card> remaining_cards;
+
+    if (same_value(cards, 0, 2) && same_value(cards, 3, 4)) {
+        full_house_vals.first = cards[0].value;
+        full_house_vals.second = cards[3].value;
+
+        card first_card = cards[0];
+        card second_card = cards[3];
+
+        remaining_cards.push_back(first_card);
+        remaining_cards.push_back(second_card);
+    } else {
+        full_house_vals.first = cards[2].value;
+        full_house_vals.second = cards[0].value;
+
+        card first_card = cards[2];
+        card second_card = cards[0];
+
+        remaining_cards.push_back(first_card);
+        remaining_cards.push_back(second_card);
+    }
+    
+    return remaining_cards;
+}
+
 bool one_pair_tiebreaker(hand & p1, hand & p2) {
     vector<card> decomp_p1 = decomp_one_pair(p1.cards);
     vector<card> decomp_p2 = decomp_one_pair(p2.cards);
@@ -335,6 +362,13 @@ bool three_of_a_kind_tiebreaker(hand & p1, hand & p2) {
     return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
 }
 
+bool full_house_tiebreaker(hand & p1, hand & p2) {
+    vector<card> decomp_p1 = decomp_full_house(p1.cards);
+    vector<card> decomp_p2 = decomp_full_house(p2.cards);
+
+    return high_card_tiebreaker_vec(decomp_p1, decomp_p2);
+}
+
 bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
     switch (rank) {
         case high_card:
@@ -350,7 +384,7 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
         case flush_:
             return high_card_tiebreaker(p1, p2);
         case full_house:
-            return false;
+            return full_house_tiebreaker(p1, p2);
         case four_of_a_kind:
             return false;
         case straight_flush:
