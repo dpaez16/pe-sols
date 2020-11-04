@@ -345,6 +345,18 @@ bool handle_tiebreaker(hand & p1, hand & p2, Rank rank) {
             return two_pair_tiebreaker(p1, p2);
         case three_of_a_kind:
             return three_of_a_kind_tiebreaker(p1, p2);
+        case straight:
+            return false;
+        case flush_:
+            return false;
+        case full_house:
+            return false;
+        case four_of_a_kind:
+            return false;
+        case straight_flush:
+            return false;
+        case royal_flush:
+            return false;
         default:
             return false;
     }
