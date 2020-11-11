@@ -22,6 +22,25 @@ bool is_prime(int n) {
 	return true;
 }
 
+void dfs(int v, graph & g, unordered_set<int> & visited) {
+    if (visited.find(v) != visited.end()) return;
+
+    stack<int> s;
+    s.push(v);
+
+    while (!s.empty()) {
+        int curr = s.top();
+        s.pop();
+        cout << curr << ' ';
+
+        auto neighbors = g.edges[curr];
+        for (int neighbor : neighbors) {
+            s.push(neighbor);
+        }
+    }
+    cout << endl;
+}
+
 void update_subgraph(int left_int, int right_int, edge_map & edges, graph & subgraph) {
     auto left_incoming_vertices = edges[right_int];
     
@@ -78,6 +97,11 @@ int main() {
         iterate_through_splits(p, primes, edges, subgraph);
 
         p++;
+    }
+
+    unordered_set<int> visited;
+    for (int v : subgraph.vertices) {
+        dfs(v, subgraph, visited);
     }
 
     return 0;
