@@ -2,11 +2,12 @@
 
 using namespace std;
 
-#define N 4
+#define N 5
+#define UPPER_BOUND 2000
 
-typedef unordered_map<int, set<int>> edge_map;
+typedef unordered_map<int, unordered_set<int>> edge_map;
 typedef struct {
-    set<int> vertices;
+    unordered_set<int> vertices;
     edge_map edges;
 } graph;
 
@@ -102,21 +103,26 @@ int find_subset_sum(graph g) {
         for (unsigned j = i + 1; j < n; j++) {
             for (unsigned k = j + 1; k < n; k++) {
                 for (unsigned l = k + 1; l < n; l++) {
-                    unordered_set<int> subset = {
-                        reduced_vertices[i],
-                        reduced_vertices[j],
-                        reduced_vertices[k],
-                        reduced_vertices[l]
-                    };
-                    
-                    if (!is_clique(subset, g)) continue;
+                    for (unsigned m = l + 1; m < n; m++) {
+                        unordered_set<int> subset = {
+                            reduced_vertices[i],
+                            reduced_vertices[j],
+                            reduced_vertices[k],
+                            reduced_vertices[l],
+                            reduced_vertices[m]
+                        };
+                        
+                        if (!is_clique(subset, g)) continue;
 
-                    int sum = 0;
-                    for (int v : subset) {
-                        sum += v;
+                        int sum = 0;
+                        for (int v : subset) {
+                            cout << v << ' ';
+                            sum += v;
+                        }
+
+                        cout << endl;
+                        return sum;
                     }
-
-                    return sum;
                 }
             }
         }
@@ -131,20 +137,20 @@ int main() {
     graph subgraph;
 
     int p = 0;
-    int n = 673109;
-    while (p <= n) {
+    while (subgraph.vertices.size() != UPPER_BOUND) {
         if (!is_prime(p)) {
             p++;
             continue;
         }
 
         primes.insert(p);
-        edges[p] = set<int>();
+        edges[p] = unordered_set<int>();
         iterate_through_splits(p, primes, edges, subgraph);
 
         p++;
     }
 
+    cout << p << endl;
     int sum = find_subset_sum(subgraph);
     cout << sum << endl;
 
