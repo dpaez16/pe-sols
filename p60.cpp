@@ -3,7 +3,7 @@
 using namespace std;
 
 #define N 5
-#define UPPER_BOUND 2000
+#define UPPER_BOUND 3000
 
 typedef unordered_map<int, unordered_set<int>> edge_map;
 typedef struct {
@@ -86,6 +86,7 @@ bool is_clique(unordered_set<int> & subset, graph & g) {
 
 int find_subset_sum(graph g) {
     vector<int> vertices(g.vertices.begin(), g.vertices.end());
+    sort(vertices.begin(), vertices.end());
     reverse(vertices.begin(), vertices.end());
 
     for (int v : vertices) {
@@ -97,6 +98,7 @@ int find_subset_sum(graph g) {
     }
 
     vector<int> reduced_vertices(g.vertices.begin(), g.vertices.end());
+    sort(reduced_vertices.begin(), reduced_vertices.end());
     unsigned n = reduced_vertices.size();
 
     for (unsigned i = 0; i < n; i++) {
