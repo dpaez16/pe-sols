@@ -22,25 +22,6 @@ bool is_prime(int n) {
 	return true;
 }
 
-void dfs(int v, graph & g, unordered_set<int> & visited) {
-    if (visited.find(v) != visited.end()) return;
-
-    stack<int> s;
-    s.push(v);
-
-    while (!s.empty()) {
-        int curr = s.top();
-        s.pop();
-        cout << curr << ' ';
-
-        auto neighbors = g.edges[curr];
-        for (int neighbor : neighbors) {
-            s.push(neighbor);
-        }
-    }
-    cout << endl;
-}
-
 void update_subgraph(int left_int, int right_int, edge_map & edges, graph & subgraph) {
     auto left_incoming_vertices = edges[right_int];
     
@@ -54,6 +35,7 @@ void update_subgraph(int left_int, int right_int, edge_map & edges, graph & subg
     int a = min(left_int, right_int);
     int b = max(left_int, right_int);
     subgraph.edges[a].insert(b);
+    subgraph.edges[b].insert(a);
 }
 
 void iterate_through_splits(int p, unordered_set<int> & primes, edge_map & edges, graph & subgraph) {
@@ -78,11 +60,75 @@ void iterate_through_splits(int p, unordered_set<int> & primes, edge_map & edges
     }
 }
 
+void remove_vertex(int v, graph & g) {
+    auto neighbors = g.edges[v];
+    for (int neighbor : neighbors) {
+        g.edges[neighbor].erase(v);
+        g.edges[v].erase(neighbor);
+    }
+
+    g.vertices.erase(v);
+    g.edges.erase(v);
+}
+
+bool is_clique(unordered_set<int> & subset, graph & g) {
+    for (int v : subset) {
+        auto neighbors = g.edges[v];
+        for (int u : subset) {
+            if (u == v) continue;
+            if (neighbors.find(u) == neighbors.end()) return false;
+        }
+    }
+
+    return true;
+}
+
+int find_subset_sum(graph g) {
+    vector<int> vertices(g.vertices.begin(), g.vertices.end());
+    reverse(vertices.begin(), vertices.end());
+
+    for (int v : vertices) {
+        auto neighbors = g.edges[v];
+
+        if (neighbors.size() >= (N - 1)) continue;
+
+        remove_vertex(v, g);
+    }
+
+    vector<int> reduced_vertices(g.vertices.begin(), g.vertices.end());
+    unsigned n = reduced_vertices.size();
+
+    for (unsigned i = 0; i < n; i++) {
+        for (unsigned j = i + 1; j < n; j++) {
+            for (unsigned k = j + 1; k < n; k++) {
+                for (unsigned l = k + 1; l < n; l++) {
+                    unordered_set<int> subset = {
+                        reduced_vertices[i],
+                        reduced_vertices[j],
+                        reduced_vertices[k],
+                        reduced_vertices[l]
+                    };
+                    
+                    if (!is_clique(subset, g)) continue;
+
+                    int sum = 0;
+                    for (int v : subset) {
+                        sum += v;
+                    }
+
+                    return sum;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 int main() {
     unordered_set<int> primes;
     edge_map edges;
     graph subgraph;
-    //int max_degree = N - 1;
 
     int p = 0;
     int n = 673109;
@@ -99,10 +145,8 @@ int main() {
         p++;
     }
 
-    unordered_set<int> visited;
-    for (int v : subgraph.vertices) {
-        dfs(v, subgraph, visited);
-    }
+    int sum = find_subset_sum(subgraph);
+    cout << sum << endl;
 
     return 0;
 }
