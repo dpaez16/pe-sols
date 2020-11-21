@@ -204,7 +204,7 @@ p83: p83.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
 p85: p85.cpp
-	$(cc) $(cc_flags) $(^) -o $(@)_test
+	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
 p98: p98.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
@@ -225,6 +225,9 @@ p113: p113.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
 p114: p114.cpp
+	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
+
+p115: p115.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
 clean:
