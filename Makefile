@@ -233,6 +233,9 @@ p115: p115.cpp
 p116: p116.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
+p117: p117.cpp
+	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
+
 clean:
 	rm -f p*_test
 	clear
