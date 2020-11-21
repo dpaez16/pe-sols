@@ -236,6 +236,9 @@ p116: p116.cpp
 p117: p117.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
+p119: p119.py
+	$(PYTHON3) $(^)
+
 clean:
 	rm -f p*_test
 	clear
