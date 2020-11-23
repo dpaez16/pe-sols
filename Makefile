@@ -191,6 +191,9 @@ p66: p66.py
 p67: p67.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
+p74: p74.py
+	$(PYTHON3) $(^)
+
 p78: p78.py
 	$(PYTHON3) $(^)
 
