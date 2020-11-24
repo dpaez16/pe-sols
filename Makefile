@@ -209,6 +209,9 @@ p83: p83.cpp
 p85: p85.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
+p97: p97.py
+	$(PYTHON3) $(^)
+
 p98: p98.cpp
 	$(CC) $(CC_FLAGS) $(^) -o $(@)_test
 
