@@ -1,5 +1,6 @@
 from itertools import product
-from collections import defaultdict
+from collections import defaultdict, deque
+from copy import deepcopy
 
 N = 5
 
@@ -55,13 +56,51 @@ def convert_sol(sol):
     sol = "".join(sol)
     return sol
 
+def get_sols(triples_group, triples_map):
+    sols = []
+
+    for start in triples_group:
+        queue = deque([(start, set(), list())])
+
+        while len(queue) != 0:
+            curr, visited, sol = queue.popleft()
+
+            if curr in visited or len(sol) > N:
+                continue
+
+            visited.add(curr)
+            sol.append(curr)
+
+            if len(sol) == N:
+                if is_valid(sol): 
+                    sol_c = convert_sol(sol)
+                    sols.append(sol_c)
+
+                continue
+            
+            _, _, c = curr
+            neighbors = triples_group.intersection(triples_map[c])
+
+            for neighbor in neighbors:
+                if neighbor == curr or neighbor[0] <= sol[0][0]:
+                    continue
+ 
+                visited_copy = deepcopy(visited)
+                sol_copy = deepcopy(sol)
+
+                queue.append((neighbor, visited_copy, sol_copy))
+
+    return sols
 
 triples = get_triples()
-triples_sum_map = defaultdict(list)
+triples_sum_map = defaultdict(set)
+triples_map = defaultdict(set)
 
 for triple in triples:
+    _, b, _ = triple
     s = sum(triple)
-    triples_sum_map[s].append(triple)
+    triples_sum_map[s].add(triple)
+    triples_map[b].add(triple)
 
 max_sol = ""
 
@@ -71,13 +110,11 @@ for s in triples_sum_map:
     if len(triples_group) < N:
         continue
 
-    selections = [triples_group] * N
-    selections = product(*selections)
+    sols = get_sols(triples_group, triples_map)
 
-    for selection in selections:
-        if is_valid(selection):
-            sol = convert_sol(selection)
-            max_sol = max(max_sol, sol)
+    if len(sols) == 0:
+        continue
+
+    max_sol = max(max_sol, max(sols))
 
 print(max_sol)
-
