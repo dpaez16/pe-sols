@@ -248,6 +248,9 @@ p117: p117.cpp
 p119: p119.py
 	$(PYTHON3) $(^)
 
+p123: p123.py
+	$(PYTHON3) $(^)
+
 clean:
 	rm -f p*_test
 	clear
