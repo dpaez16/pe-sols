@@ -25,7 +25,7 @@ primes = gen_primes(N)
 
 idx = 0
 for n, p in enumerate(primes):
-    if p ** 2 > (MOD // 2):
+    if p * p > MOD:
         idx = n
         break
 
@@ -33,12 +33,10 @@ primes = primes[idx:]
 for n, p in enumerate(primes):
     n += idx + 1
 
-    p_sq = p ** 2
-    a1 = (p - 1) ** n
-    a2 = (p + 1) ** n
-    b1 = a1 % p_sq
-    b2 = a2 % p_sq
-    r = (b1 + b2) % p_sq
+    p_sq = p * p
+    b1 = pow(p - 1, n, p_sq)
+    b2 = pow(p + 1, n, p_sq)
+    r = pow(b1 + b2, 1, p_sq)
 
     if r > UPPER_BOUND:
         print(n)
