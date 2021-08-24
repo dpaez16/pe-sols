@@ -75,7 +75,7 @@ def get_eqn(u, d):
     b = u.y - m * u.x
     return (m, b)
 
-def eqn(p, eps=1e-3):
+def eqn(p):
     x, y = p.x, p.y
     return abs(4 * x ** 2 + y ** 2 - 100)
 
@@ -114,16 +114,17 @@ def get_incident_angles(v, d):
     angles = sorted([theta1, theta2])
     return angles
 
-def get_next_direction(prev_dir, v, angles):
+def get_next_direction(prev_dir, v, angles, eps=1e-2):
     d = Vector(1, slope(v))
     
     new_d = d.rotate(angles[0])
-    if abs(Vector.angle_between(-prev_dir, new_d)) <= 1e-2:
+    if abs(Vector.angle_between(-prev_dir, new_d)) <= eps:
         return d.rotate(angles[1])
     
     return new_d
 
 exit_point = Vector(0, 10)
+eps = 1e-2
 
 u = Vector(0, 10.1)
 d = Vector(1.4, -9.6) - u
@@ -131,7 +132,7 @@ bounces = 0
 
 while True:
     v = get_next_point(u, d)
-    if abs(v - exit_point) <= 1e-2:
+    if abs(v - exit_point) <= eps:
         break
     
     angles = get_incident_angles(v, d)
