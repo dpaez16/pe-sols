@@ -24,7 +24,7 @@ using namespace std;
 
     Substituting (2) in (3), we get:
 
-    x(theta) = INITIAL_SPEED * cos(theta) * (INITIAL_SPEED * sin(theta) + sqrt(INITIAL_SPEED^2 * sin^2(theta) + 2 * G * INITIAL_HEIGHT)) / G
+    x(theta) = INITIAL_SPEED * cos(theta) * (INITIAL_SPEED * sin(theta) + sqrt(INITIAL_SPEED^2 * sin^2(theta) + 2 * G * INITIAL_HEIGHT)) / G	(4)
 */
 double f(double theta) {
     double v = INITIAL_SPEED;
@@ -35,7 +35,7 @@ double f(double theta) {
 }
 
 /*
-    Derivative of above function.
+    Derivative of above function. Used Wolfram to compute it.
 */
 double df(double theta) {
     double v = INITIAL_SPEED;
@@ -67,6 +67,33 @@ double find_zero(double (*f)(double), pair<double, double> interval, double eps=
 
 /*
     Computes volume of solid of revolution of firework trajectory.
+
+    The surrounding area a 2D firecracker covers is a symmetric upside-down parabola.
+    It will be of the form:
+    
+    g(x) = ax^2 + c										(5)
+
+    We can see that f(0) = c = the highest point a fragment of the firework will travel.
+    This value will be:
+
+    c = INITIAL_HEIGHT + INITIAL_SPEED^2 / 2 * G
+
+    To figure out `a`, we observe that the zeros of (5) represent the furthest points a
+    fragment will travel before hitting the ground. 
+    
+    To compute these points, we must find the optimal angle that yields the maximum 
+    horizontal distance traveled (i.e. the optimal angle that maximizes (4)). 
+    We will compute this optimal angle through the bisection method.
+
+    Once we have this value (call it `x_c`). We can figure out `a` like so:
+
+    g(x_c) = ax_c^2 + c = 0    ==>    a = -c / x_c^2
+
+    Now we have both coefficients of (5), we can compute the volume covered by a 3D
+    firework by computing the volume of solid of revolution like so:
+
+    \int_0^{x_c} 2 * pi * x * g(x) dx = \int_0^{x_c} 2 * pi * x * (ax^2 + c) dx
+                                      = 0.5 * pi * a * x_c^4 + pi * c * x_c^2
 */
 double volume() {
     double optimal_angle = find_zero(df, {-M_PI / 2, M_PI / 2});
