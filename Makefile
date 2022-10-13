@@ -5,6 +5,9 @@ PYTHON3=python3
 p50: p50.cpp
 	$(CC) $(CC_FLAGS) -pthread $(^) -o $(@)_test
 
+p88: p88.cpp
+	$(CC) $(CC_FLAGS) -pthread $(^) -o $(@)_test
+
 %: %.py
 	$(PYTHON3) $(^)
 
