@@ -36,8 +36,8 @@ def f(n, memo):
 
     l = largest_fitting_cube(n - 1) if is_cube(n) else largest_fitting_cube(n)
 
-    b = memo[n - l] if (n - l) in memo else f(n - l, memo)
     a = memo[l] if l in memo else f(l, memo)
+    b = memo[n - l] if (n - l) in memo else f(n - l, memo)
 
     memo[n] = a + b + (n - l)
     return memo[n]
