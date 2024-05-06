@@ -1,6 +1,8 @@
 from math import floor, cos, sin, pi
 
 N_PTS = 10_000
+CENTRE = (0.25, 0.50)
+RADIUS = 0.25
 
 def s(x):
     rational_portion = x - floor(x)
@@ -14,10 +16,11 @@ def linspace(a, b, n):
     return [a + dx * i for i in range(n)]
 
 def get_theta_value():
+    c_x, c_y = CENTRE
     theta = linspace(pi, 1.5 * pi, N_PTS)
     for t in theta:
-        x = 0.25 + 0.25 * cos(t)
-        y = 0.50 + 0.25 * sin(t)
+        x = c_x + RADIUS * cos(t)
+        y = c_y + RADIUS * sin(t)
         y_b = blancmange(x)
 
         if abs(y_b - y) <= 1e-5:
@@ -33,17 +36,28 @@ def trapz(ys, xs):
 
     return total
 
+"""
+    The circle intersects with the curve at two points.
+    We can see that one of the values is t = 0:
+        circle(t) = (0.25, 0.50) + 0.25 * exp(i * t)
+        blancmange(0.5) = 0.5
+        circle(0).x = 0.5
+
+    The other intersection point can be solved for numerically (get_theta_value).
+    Then we calculate the answer through numerical integration.
+"""
+
 t = get_theta_value()
-a = 0.25 + 0.25 * cos(t)
-b = 0.5
+a = CENTRE[0] + RADIUS * cos(t)
+b = CENTRE[0] + RADIUS * cos(0)
 xs = linspace(a, b, N_PTS)
 ys = [blancmange(x) for x in xs]
 
 total_area = trapz(ys, xs)
 
 theta = linspace(t, 2 * pi, N_PTS)
-xs = [0.25 + 0.25 * cos(t) for t in theta]
-ys = [0.50 + 0.25 * sin(t) for t in theta]
+xs = [CENTRE[0] + RADIUS * cos(t) for t in theta]
+ys = [CENTRE[1] + RADIUS * sin(t) for t in theta]
 
 area = total_area - trapz(ys, xs)
 area = round(area, 8)
